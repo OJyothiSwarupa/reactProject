@@ -1,0 +1,190 @@
+import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
+import { useEffect, useState } from "react";
+
+function LeftTable(props) {
+  const [data, setData] = useState([]);
+  const [Temp , setTemp] = useState([])
+  let { add, refresh, save ,setAdd,setRefresh , setSave} = { ...props };
+
+
+  const ChangeValue = (field,index,val)=>{    
+       const Demo = Temp.map((Info,idx)=>{
+            if(idx === index){
+              return {
+                 ...Info ,[field] : val 
+              }
+            }else{
+                return Info
+            }
+        })
+        setTemp(Demo)
+  }
+
+  const DeleteRecord = (index)=>{
+      setData(()=>data.filter((Info,idx)=>idx!==index))
+      setTemp(data)
+  }
+  
+
+
+  useEffect(() => {
+      if(save && add){
+        Temp.push({
+            Module : document.getElementsByClassName("Module")[0].value ,
+            SelectionID : document.getElementsByClassName("SelectionID")[0].value ,
+            Type : document.getElementsByClassName("Type")[0].value ,
+            User : document.getElementsByClassName("User")[0].value
+          })
+          setAdd(!add)
+          setSave(!save)  
+          setData(Temp)
+      } else if (save){
+        setTemp(Temp)
+        setData(Temp)
+        setSave(!save)
+      }
+  }, [save , refresh ,data ]);
+
+  return (
+    <>
+      <Table bordered hover size="m" className="me-2 ms-2" style={{width:"60%"}}>
+        <thead>
+          <tr>
+            {Array.from({ length: 3 }).map((_, idx) => {
+              return (
+                <th key={idx}>
+                  <Form.Control
+                    type="text"
+                    id="inputPassword5"
+                    aria-describedby="passwordHelpBlock"
+                    placeholder="Search"
+                    className="rounded-0"
+                  />
+                </th>
+              );
+            })}
+            <th></th>
+            <th></th>
+          </tr>
+          <tr>
+            <th style={{width:"20%"}}>Module</th>
+            <th style={{width:"20%"}}>Selection ID</th>
+            <th style={{width:"20%"}}>Type</th>
+            <th style={{width:"20%"}}>User</th>
+            <th style={{width:"10%"}}>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {add ? (
+            <tr >
+              <td>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="rounded-0 Module"
+                >
+                  <option value="M1">M1</option>
+                  <option value="M2">M2</option>
+                  <option value="M3">M3</option>
+                  <option value="M4">M4</option>
+                </Form.Select>
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  id="inputPassword5"
+                  aria-describedby="passwordHelpBlock"
+                  className="rounded-0 SelectionID"
+                />
+              </td>
+              <td>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="rounded-0 Type"
+                >
+                  <option value="T1">T1</option>
+                  <option value="T2">T2</option>
+                  <option value="T3">T3</option>
+                  <option value="T4">T4</option>
+                </Form.Select>
+              </td>
+              <td>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="rounded-0 User"
+                >
+                  <option value="U1">U1</option>
+                  <option value="U2">U2</option>
+                  <option value="U3">U3</option>
+                  <option value="U4">U4</option>
+                </Form.Select>
+              </td>
+              <td style={{cursor :"pointer"}}>&#10060;</td>
+            </tr>
+          ) : (
+            ""
+          )}
+
+          {data.map((Info, idx) => {
+            return (
+              <tr key={idx}>
+                <td>
+                  <Form.Select
+                    aria-label="Default select example"
+                    className="rounded-0"
+                    onChange={(e)=>{ChangeValue("Module" ,idx , e.target.value)}}
+                  >
+                  <option>{Info.Module}</option>
+                  <option value="M1">M1</option>
+                  <option value="M2">M2</option>
+                  <option value="M3">M3</option>
+                  <option value="M4">M4</option>
+                  </Form.Select>
+                </td>
+                <td>
+                  <Form.Control
+                    type="text"
+                    id="inputPassword5"
+                    aria-describedby="passwordHelpBlock"
+                    placeholder={Info.SelectionID}
+                    className="rounded-0 "
+                    onChange={(e)=>{ChangeValue("SelectionID" ,idx , e.target.value)}}
+                  />
+                </td>
+                <td>
+                  <Form.Select
+                    aria-label="Default select example"
+                    className="rounded-0"
+                    onChange={(e)=>{ChangeValue("Type" ,idx , e.target.value)}}
+                  >
+                    <option>{Info.Type}</option>
+                    <option value="T1">T1</option>
+                    <option value="T2">T2</option>
+                    <option value="T3">T3</option>
+                    <option value="T4">T4</option>
+                  </Form.Select>
+                </td>
+                <td>
+                  <Form.Select
+                    aria-label="Default select example"
+                    className="rounded-0"
+                    onChange={(e)=>{ChangeValue("User" ,idx , e.target.value)}}
+                  >
+                    <option>{Info.User}</option>
+                    <option value="U1">U1</option>
+                  <option value="U2">U2</option>
+                  <option value="U3">U3</option>
+                  <option value="U4">U4</option>
+                  </Form.Select>
+                </td>
+                <td style={{cursor :"pointer"}} onClick={()=>{DeleteRecord(idx)}}>&#10060;</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </>
+  );
+}
+
+export default LeftTable;
